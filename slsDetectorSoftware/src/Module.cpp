@@ -3110,7 +3110,13 @@ void Module::initializeModuleStructure(detectorType type) {
     shm()->numberOfModule.y = 0;
     shm()->controlPort = DEFAULT_PORTNO;
     shm()->stopPort = DEFAULT_PORTNO + 1;
-    sls::strcpy_safe(shm()->settingsDir, getenv("HOME"));
+    char *home_directory = getenv("HOME");
+    if (home_directory != nullptr)
+        strcpy_safe(shm()->settingsDir, home_directory);
+    else {
+        strcpy_safe(shm()->settingsDir, "");
+        std::cout << "Warning, HOME directory not set" << std::endl;
+    }
     sls::strcpy_safe(shm()->rxHostname, "none");
     shm()->rxTCPPort = DEFAULT_PORTNO + 2;
     shm()->useReceiverFlag = false;
